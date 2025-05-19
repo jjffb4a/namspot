@@ -1,0 +1,27 @@
+<div class="box">
+  <label>Search:</label>
+  <input
+    type="text"
+    value={{this.query}}
+    placeholder="Try Alice, Bob, etc."
+    {{on "input" (fn this.updateQuery)}}
+    {{on-key-trigger-query (fn this.applyQuery)}}
+  />
+
+  <ul>
+    {{#each this.filteredNames as |item|}}
+      <li>{{{item.html}}}</li>
+    {{/each}}
+  </ul>
+</div>
+
+<!--!
+added 1 line
+    {{on-key-trigger-query (fn this.applyQuery)}}
+
+
+//   {{on "input" (fn @onSearch value="target.value")}}   // gives object
+//  {{on "input" (fn @onSearch (pick "target.value"))}}   // if using pick   needs pick helper
+//     {{on "input" (fn (e) @onSearch e.target.value)}}
+//       --> Error: Attempted to resolve `e`, which was expected to be a helper, but nothing was found.
+!-->
