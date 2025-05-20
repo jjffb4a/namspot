@@ -1,0 +1,37 @@
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, fillIn /*, typeIn */} from '@ember/test-helpers';
+import { hbs } from 'ember-cli-htmlbars';
+
+module('Integration | Component | ui-box', function (hooks) {
+  setupRenderingTest(hooks);
+
+  test('it renders and filters names', async function (assert) {
+    this.set('names', [
+      { id: '1', text: 'Alice went to Berlin' },
+      { id: '2', text: 'Clara likes Ember.js' },
+      { id: '3', text: 'Bob and Eva' }
+    ]);
+    this.set('query', 'bob');
+    this.set('onSearch', (value) => this.set('query', value));
+
+    await render(hbs`
+      <UiBox
+        @names={{this.names}}
+        @query={{this.query}}
+        @onSearch={{this.onSearch}}
+      />
+    `);
+
+    assert.dom('input').exists();
+    assert.dom('ul li').exists({ count: 3 });
+
+    await fillIn('input', 'clara');
+    assert.dom('ul li').exists({ count: 1 });
+    assert.dom('ul').includesText('Clara likes Ember.js');
+    assert.ok(this.element.querySelector('ul li')?.innerHTML.includes('<mark>Clara</mark>'), 'Clara is highlighted with <mark>');
+    // assert.dom('ul li').hasTextContaining('Clara');
+    // assert.dom('ul li').hasTextContaining('Clara');
+    // assert.ok(document.querySelector('ul li')?.innerHTML.includes('<mark>Clara</mark>'), 'Clara is wrapped in <mark>');
+  });
+});

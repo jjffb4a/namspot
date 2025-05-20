@@ -1,11 +1,24 @@
 // app/modifiers/on-input-value.js
+
 import { modifier } from 'ember-modifier';
 
 export default modifier((element, [callback]) => {
-  element.addEventListener('input', (e) => {
-    callback?.(e.target.value);
-  });
+  function handler(e) {
+    callback?.(e.target.value); // ✅ only pass the input value
+  }
+
+  element.addEventListener('input', handler);
+  return () => element.removeEventListener('input', handler);
 });
+
+
+// import { modifier } from 'ember-modifier';
+
+// export default modifier((element, [callback]) => {
+//   element.addEventListener('input', (e) => {
+//     callback?.(e.target.value);
+//   });
+// });
 
 
 // import { modifier } from 'ember-modifier';
